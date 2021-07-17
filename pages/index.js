@@ -86,16 +86,16 @@ export default function Home(props) {
           </Box>
 
           <Box>
-            <h2>O quer você deseja?</h2>
+            <h2>Deseja criar uma comunidade?</h2>
             <form
               onSubmit={function handleCriaComunidade(event) {
                 event.preventDefault();
                 const dadosDoForm = new FormData(event.target);
-                const comunidade = {                 
-                  image_url: dadosDoForm.get("image_url"),                    
+                const comunidade = {
+                  image_url: dadosDoForm.get("image_url"),
                   creator_slug: "fmafroi",
                   url: dadosDoForm.get("url"),
-                  title: dadosDoForm.get("title"),                  
+                  title: dadosDoForm.get("title"),
                 };
 
                 fetch("/api/comunidades", {
@@ -104,15 +104,13 @@ export default function Home(props) {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify(comunidade),
-                })
-                .then(async (response) => {
+                }).then(async (response) => {
                   const dados = await response.json();
                   const comunidade = dados.registroCriado;
                   console.log(comunidade);
                   const comunidadesAtualizadas = [...comunidades, comunidade];
                   setComunidades(comunidadesAtualizadas);
-                })
-
+                });
               }}
             >
               <div>
@@ -165,7 +163,7 @@ export default function Home(props) {
           </ProfileRelationsBoxWrapper>
 
           <ProfileRelationsBoxWrapper>
-            {/* <Seguidores /> */}
+            <Seguidores />
           </ProfileRelationsBoxWrapper>
         </div>
       </MainGrid>
@@ -179,24 +177,25 @@ export async function getServerSideProps(ctx) {
   const decodedToken = jwt.decode(token);
   const githubUser = decodedToken?.githubUser;
 
-  console.log('Cookies +>', token);
+  console.log("Cookies +>", token);
   console.log(decodedToken, githubUser);
 
-
-  const { isAuthenticated } = await fetch('https://alurakut.vercel.app/api/auth', {
-    headers: {
-      Authorization: token
+  const { isAuthenticated } = await fetch(
+    "https://alurakut.vercel.app/api/auth",
+    {
+      headers: {
+        Authorization: token,
+      },
     }
-  })
-  .then((resposta) => resposta.json()) ;
-  
+  ).then((resposta) => resposta.json());
+
   if (!isAuthenticated) {
     return {
       redirect: {
-        destination: '/login',
+        destination: "/login",
         permanent: false,
       },
-    }
+    };
   }
 
   // const followers = await fetch(`https://api.github.com/users/${githubUser}/followers`)
@@ -210,6 +209,6 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       githubUser,
-    }
-  }
+    },
+  };
 }
