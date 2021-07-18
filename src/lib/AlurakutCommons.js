@@ -118,7 +118,7 @@ AlurakutMenu.Wrapper = styled.header`
       }
     }
 
-    nav {
+    nav {     
       display: none;
       @media(min-width: 860px) {
         display: flex;
@@ -226,6 +226,7 @@ export function AlurakutProfileSidebarMenuDefault() {
 }
 AlurakutProfileSidebarMenuDefault.Wrapper = styled.div`
   a {
+    opacity: 0.2;
     font-size: 12px;
     color: #2E7BB4;
     margin-bottom: 16px;
@@ -288,6 +289,7 @@ export function OrkutNostalgicIconSet(props) {
   )
 }
 OrkutNostalgicIconSet.List = styled.ul`
+  opacity: 0.2;
   margin-top: 32px;
   list-style: none;
   display: flex;

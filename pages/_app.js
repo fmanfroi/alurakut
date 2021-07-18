@@ -9,9 +9,13 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  body {
+  body {    
     font-family: sans-serif;
-    background-color: #D9E6F6;
+    background-image: url('/under.jpg');  
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;      
   }
 
   #__next {

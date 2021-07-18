@@ -1,48 +1,49 @@
 import React from "react";
 import Seguidor from "./Seguidor";
 import { useEffect, useState } from "react";
+import actions from "./actions-fetch";
 
 const Seguidores = (props) => {
-  const { filterText} = props;
-  const rows = [];  
+  const { filterText } = props;
+  const [resultadoBusca, setResultadoBusca] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(3);
+
+  const handleCarregar = () => {
+    actions
+      .carregar(currentPage)
+      .then( function (newFollowers) {
+        console.log(" num de seguidores ", followers.length);        
+        console.log(" num de novos seguidores ", newFollowers.length);
+ /*        if (followers.length > 20) {
+          console.log(" removendo seguidores ", followers.length);
+          setFollowers(followers.splice(0, 10));
+        }  */
+        setFollowers([...followers, ...newFollowers])
+        console.log(" num de seguidores apos ", followers.length);
+      });
+      //.then((newFollowers) => setFollowers((prevFollowers) => [...prevFollowers, ...newFollowers])
+      //);      
+  };
+
+  useEffect(() => handleCarregar(), [currentPage]);
 
   useEffect(() => {
-    const perPage = 10;
-    const ENDPOINT = 'https://api.github.com/users/omariosouto/followers';
-    const URL = `${ENDPOINT}?per_page=${perPage}&page=${currentPage}&order=DESC`;
-    fetch(URL)
-      .then((response) => response.json())
-      .then((newFollowers) => setFollowers([...followers, ...newFollowers]))
-      .then(console.log(followers))
-  }, [currentPage]);
-
-  useEffect(() => {
-    const intersectionObserver = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        console.log('Sentinela appears!', currentPage)
-        setCurrentPage((currentValue) => currentValue + 1);
-
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        console.log("Sentinela appears!", currentPage);
+        setCurrentPage((currentValue) => currentValue + 1);                
       }
-    })
-    intersectionObserver.observe(document.querySelector('#sentinela'));
+    });
+    intersectionObserver.observe(document.querySelector("#sentinela"));
     return () => intersectionObserver.disconnect();
   }, []);
 
- /*  followers.forEach((seguidor) => {
-    const { login, id } = seguidor;
-    if (login.indexOf(filterText) === -1) {
-      return;
-    }    
-    rows.push(<Seguidor key={id} login={login} />);
-  }); */
-
   return (
     <ul>
-      {followers.map(follower => (          
-          <Seguidor key={follower.id} login={follower.login} />          
-        ))}
+      {followers.map((follower) => (
+        <Seguidor key={follower.id} login={follower.login} />
+      ))}
       <li id="sentinela"></li>
     </ul>
   );
